@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Resultados da Pesquisa</title>
+
+    <link rel="stylesheet" href="static/style.css">
+</head>
+
+<body>
+
+    <header>
+        <h1>Resultados da Pesquisa</h1>
+        <p>Categoria selecionada: {{ categoria }}</p>
+    </header>
+
+    <main>
+
+        <a href="/" class="voltar">Voltar à pesquisa</a>
+
+        <section class="estatisticas">
+
+            <h2>Resumo da análise</h2>
+
+            <div class="resumo">
+
+                <div class="card">
+                    <h3>Total de produtos</h3>
+                    <p>{{ dados.total }}</p>
+                </div>
+
+                <div class="card">
+                    <h3>Preço médio</h3>
+                    <p>R$ {{ "%.2f"|format(dados.preco_medio) }}</p>
+                </div>
+
+                <div class="card">
+                    <h3>Menor preço</h3>
+
+                    {% if dados.menor_preco %}
+                        <p>{{ dados.menor_preco.nome }}</p>
+                        <strong>
+                            R$ {{ "%.2f"|format(dados.menor_preco.preco) }}
+                        </strong>
+                    {% else %}
+                        <p>Não disponível</p>
+                    {% endif %}
+                </div>
+
+                <div class="card">
+                    <h3>Maior preço</h3>
+
+                    {% if dados.maior_preco %}
+                        <p>{{ dados.maior_preco.nome }}</p>
+                        <strong>
+                            R$ {{ "%.2f"|format(dados.maior_preco.preco) }}
+                        </strong>
+                    {% else %}
+                        <p>Não disponível</p>
+                    {% endif %}
+                </div>
+
+            </div>
+
+            <div class="melhor-avaliacao">
+
+                <h3>Produto com melhor avaliação</h3>
+
+                {% if dados.melhor_avaliacao %}
+                    <p>{{ dados.melhor_avaliacao.nome }}</p>
+                    <p>
+                        Avaliação:
+                        {{ dados.melhor_avaliacao.avaliacao }}
+                    </p>
+                {% else %}
+                    <p>Não há avaliações disponíveis.</p>
+                {% endif %}
+
+            </div>
+
+        </section>
+
+        <section>
+
+            <h2>Produtos encontrados</h2>
+
+            {% if dados.produtos %}
+
+                <div class="produtos">
+
+                    {% for produto in dados.produtos %}
+
+                        <article class="card">
+
+                            <h3>{{ produto.nome }}</h3>
+
+                            <p>
+                                <strong>Preço:</strong>
+                                {% if produto.preco is not none %}
+                                    R$ {{ "%.2f"|format(produto.preco) }}
+                                {% else %}
+                                    Não informado
+                                {% endif %}
+                            </p>
+
+                            <p>
+                                <strong>Categoria:</strong>
+                                {{ produto.categoria or "Não informada" }}
+                            </p>
+
+                            <p>
+                                <strong>Avaliação:</strong>
+                                {{ produto.avaliacao or "Não informada" }}
+                            </p>
+
+                            {% if produto.link %}
+                                <a href="{{ produto.link }}"
+                                   target="_blank"
+                                   rel="noopener noreferrer">
+                                    Ver produto
+                                </a>
+                            {% endif %}
+
+                        </article>
+
+                    {% endfor %}
+
+                </div>
+
+            {% else %}
+
+                <p>Nenhum produto encontrado nessa categoria.</p>
+
+            {% endif %}
+
+        </section>
+
+    </main>
+
+</body>
+</html>
